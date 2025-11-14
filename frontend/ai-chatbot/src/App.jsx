@@ -3,7 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function App() {
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello 👋 I'm your AI assistant. How can I help you today?" },
+    { 
+      sender: "bot", 
+      text: "Hey rider! 🏍️ I'm ThrottleBot, your motorized companion! Ready to rev up some conversation?" 
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,7 +57,7 @@ export default function App() {
     } catch (err) {
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "❌ Error receiving streaming response." },
+        { sender: "bot", text: "🛑 Engine trouble! Connection lost. Try revving it up again! 🔧" },
       ]);
     } finally {
       setLoading(false);
@@ -62,46 +65,111 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white font-sans">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-red-900/20 to-gray-800 text-white font-sans relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-600 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-bounce delay-500"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 py-5 shadow-lg text-center text-2xl font-bold tracking-wide relative overflow-hidden">
+      <header className="relative bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 py-6 shadow-2xl text-center z-10 border-b-2 border-red-400/50">
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
         <motion.div
-          animate={{ x: [0, 20, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute left-0 top-0 w-full h-full opacity-10"
-        />
-        🤖 Asstoast Assistant
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="relative flex items-center justify-center space-x-3"
+        >
+          <motion.div
+            animate={{ 
+              rotate: [0, 5, -5, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="text-3xl"
+          >
+            🏍️
+          </motion.div>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-yellow-200 tracking-tight font-mono">
+            THROTTLEBOT
+          </h1>
+          <motion.div
+            animate={{ 
+              rotate: [0, -5, 5, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+            className="text-3xl"
+          >
+            🔧
+          </motion.div>
+        </motion.div>
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-sm text-white/80 mt-1 font-light tracking-wide"
+        >
+          Your High-Octane AI Companion
+        </motion.p>
       </header>
 
       {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+      <main className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-red-600 scrollbar-track-transparent relative z-10">
         <AnimatePresence initial={false}>
           {messages.map((msg, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div
-                className={`max-w-xs md:max-w-md px-5 py-3 rounded-2xl shadow-lg whitespace-pre-wrap break-words border ${
-                  msg.sender === "user"
-                    ? "bg-blue-600/90 border-blue-500 text-white rounded-br-none hover:bg-blue-700 transition"
-                    : "bg-gray-800/90 border-gray-700 text-gray-100 rounded-bl-none"
-                }`}
-              >
-                {msg.text || (msg.sender === "bot" && (
-                  <div className="flex items-center space-x-2 animate-pulse">
-                    <span>Thinking</span>
-                    <span className="flex space-x-1">
-                      <span>.</span>
-                      <span>.</span>
-                      <span>.</span>
-                    </span>
-                  </div>
-                ))}
+              <div className={`flex items-start space-x-3 max-w-xs md:max-w-md lg:max-w-lg ${msg.sender === "user" ? "flex-row-reverse space-x-reverse" : ""}`}>
+                {/* Avatar */}
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-lg border ${
+                    msg.sender === "user" 
+                      ? "bg-gradient-to-br from-red-500 to-orange-500 border-red-400" 
+                      : "bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600"
+                  }`}
+                >
+                  {msg.sender === "user" ? "👤" : "🤖"}
+                </motion.div>
+                
+                {/* Message Bubble */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className={`px-4 py-3 rounded-2xl shadow-xl backdrop-blur-sm border-2 ${
+                    msg.sender === "user"
+                      ? "bg-gradient-to-br from-red-600 to-orange-500 text-white rounded-br-none border-red-400/50"
+                      : "bg-gray-800/80 border-gray-600/50 text-gray-100 rounded-bl-none"
+                  }`}
+                >
+                  {msg.text || (msg.sender === "bot" && (
+                    <div className="flex items-center space-x-2">
+                      <motion.div
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                        className="w-2 h-2 bg-red-400 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}
+                        className="w-2 h-2 bg-orange-400 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}
+                        className="w-2 h-2 bg-yellow-400 rounded-full"
+                      />
+                      <span className="text-red-300 text-sm">Revving up response...</span>
+                    </div>
+                  ))}
+                </motion.div>
               </div>
             </motion.div>
           ))}
@@ -112,24 +180,74 @@ export default function App() {
       {/* Input Area */}
       <form
         onSubmit={handleSend}
-        className="flex items-center gap-3 p-4 border-t border-gray-800 bg-gray-900/80 backdrop-blur-lg sticky bottom-0 z-10"
+        className="relative p-4 bg-gray-900/70 backdrop-blur-xl border-t-2 border-gray-600/50 z-10"
       >
-        <input
-          type="text"
-          className="flex-1 p-3 bg-gray-800/90 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 transition"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={loading}
-          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend(e)}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 shadow-md hover:shadow-blue-500/20"
+        <div className="flex items-center gap-3 max-w-4xl mx-auto">
+          <motion.div
+            whileFocus={{ scale: 1.02 }}
+            className="flex-1 relative"
+          >
+            <input
+              type="text"
+              className="w-full p-4 bg-gray-800/80 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 placeholder-gray-400 transition-all duration-300 border-2 border-gray-600/50 backdrop-blur-sm pr-12 font-mono"
+              placeholder="Type your message and hit the throttle... 🏍️"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend(e)}
+            />
+            {!input && (
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                ⚡
+              </div>
+            )}
+          </motion.div>
+          <motion.button
+            type="submit"
+            disabled={loading || !input.trim()}
+            whileHover={{ scale: loading ? 1 : 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed shadow-lg hover:shadow-red-500/25 flex items-center space-x-2 min-w-[100px] justify-center border-2 border-red-400/30 font-mono tracking-wide"
+          >
+            {loading ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+              />
+            ) : (
+              <>
+                <span>REV</span>
+                <motion.span
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
+                >
+                  🏍️
+                </motion.span>
+              </>
+            )}
+          </motion.button>
+        </div>
+        
+        {/* Quick suggestions */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-wrap justify-center gap-2 mt-3 max-w-4xl mx-auto"
         >
-          {loading ? "..." : "Send"}
-        </button>
+          {["Best bike routes", "Maintenance tips", "Gear recommendations", "Road trip ideas"].map((suggestion) => (
+            <motion.button
+              key={suggestion}
+              type="button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setInput(suggestion)}
+              className="px-3 py-1.5 text-xs bg-gray-700/60 hover:bg-red-600/40 rounded-lg text-gray-300 transition-all border border-gray-600/30 backdrop-blur-sm font-mono"
+            >
+              {suggestion}
+            </motion.button>
+          ))}
+        </motion.div>
       </form>
     </div>
   );
